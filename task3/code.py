@@ -1,64 +1,56 @@
+print("EMPLOYEE PAYROLL SYSTEM")
 
+# Employee details
+name = input("Enter Employee Name: ")
+emp_id = input("Enter Employee ID: ")
 
-patients = []
+basic = float(input("Enter Basic Salary: "))
+hours = float(input("Enter Overtime Hours: "))
 
-n = int(input("Enter number of patients: "))
+incentive = 1000
 
-for i in range(n):
-    print("\nEnter details for Patient", i + 1)
+# Validate inputs
+if basic < 0 or hours < 0:
+    print("Invalid Input!")
 
-    name = input("Enter patient name: ")
-    consultation = float(input("Consultation charges: "))
-    diagnostic = float(input("Diagnostic charges: "))
-    treatment = float(input("Treatment charges: "))
-    age = int(input("Enter patient age: "))
-    income = float(input("Enter annual family income: "))
+else:
 
-  
-    if (consultation < 0 or diagnostic < 0
-            or treatment < 0 or age < 0 or income < 0):
-        print("Invalid input! Charges, age and income "
-              "cannot be negative.")
-        continue
+    # Calculate allowances
+    allowance = basic * 0.20
 
-  
+    # Calculate overtime
+    overtime = hours * 200
 
-    # Apply conditional concessions
-    concession = 0
+    # Calculate gross salary
+    gross = basic + allowance + overtime + incentive
 
-    if age >= 60:
-        concession = total * 0.15
-    elif income <= 200000:
-        concession = total * 0.10
+    # Progressive deductions
+    if gross <= 20000:
+        deduction = gross * 0.05
 
-    final_bill = total - concession
+    elif gross <= 40000:
+        deduction = gross * 0.10
 
-    
-    if income <= 200000:
-        category = "Subsidized Patient"
-    elif income <= 500000:
-        category = "Standard Patient"
     else:
-        category = "Full Payment Patient"
+        deduction = gross * 0.15
 
-    
-    patients.append({
-        "name": name,
-        "total": total,
-        "concession": concession,
-        "final_bill": final_bill,
-        "category": category
-    })
+    # Calculate net salary
+    net = gross - deduction
 
+    # Salary statement
+    print("\n----- SALARY STATEMENT -----")
 
-print("\n======= HOSPITAL BILLING REPORT =======")
+    print("Employee Name:", name)
+    print("Employee ID:", emp_id)
+    print("Basic Salary: Rs.", basic)
+    print("Allowances: Rs.", allowance)
+    print("Overtime Payment: Rs.", overtime)
+    print("Incentives: Rs.", incentive)
 
-for p in patients:
-    print("\nPatient Name:", p["name"])
-    print("Total Charges: Rs.", round(p["total"], 2))
-    print("Concession: Rs.", round(p["concession"], 2))
-    print("Final Bill: Rs.", round(p["final_bill"], 2))
-    print("Patient Classification:", p["category"])
+    print("----------------------------")
+    print("Gross Salary: Rs.", gross)
+    print("Deduction: Rs.", deduction)
+    print("Net Salary: Rs.", net)
 
-print("\nTotal patients processed:", len(patients))
-
+    print("----------------------------")
+    print("Salary Calculated Successfully!")
