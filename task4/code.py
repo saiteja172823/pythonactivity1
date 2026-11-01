@@ -1,44 +1,82 @@
+print("MOBILE PLAN COST OPTIMIZATION")
 
+name = input("Enter Your Name: ")
 
-n = int(input("Enter number of employees: "))
+data = float(input("Enter Required Data (GB): "))
+calls = int(input("Enter Required Calling Minutes: "))
+validity = int(input("Enter Required Validity Days: "))
+budget = float(input("Enter Your Budget: "))
 
-for i in range(n):
-    print("\nEmployee", i + 1)
+# Validate input
+if data < 0 or calls < 0 or validity <= 0 or budget < 0:
 
-    name = input("Enter employee name: ")
-    basic = float(input("Enter basic pay: "))
-    overtime = float(input("Enter overtime hours: "))
-    incentives = float(input("Enter incentives: "))
+    print("Invalid Input!")
 
-    if basic < 0 or overtime < 0 or incentives < 0:
-        print("Invalid input! Values cannot be negative.")
-        continue
+else:
 
-  
-    allowances = basic * 0.20
-    overtime_pay = overtime * 200
+    # Mobile plans
+    plans = [
+        ["Basic", 199, 2, 500, 28],
+        ["Standard", 299, 5, 1000, 28],
+        ["Premium", 399, 10, 999999, 56],
+        ["Unlimited", 599, 20, 999999, 84]
+    ]
 
-    gross = basic + allowances + overtime_pay + incentives
+    best_plan = None
+    lowest_cost = float('inf')
 
-    
-    if gross <= 10000:
-        deduction = 0
-    elif gross <= 20000:
-        deduction = (gross - 10000) * 0.05
+    # Check each plan
+    for plan in plans:
+
+        name_plan = plan[0]
+        price = plan[1]
+        plan_data = plan[2]
+        plan_calls = plan[3]
+        plan_validity = plan[4]
+
+        # Check validity
+        if plan_validity < validity:
+            continue
+
+        # Extra data charges
+        extra_data = max(0, data - plan_data)
+        data_charge = extra_data * 20
+
+        # Extra calling charges
+        extra_calls = max(0, calls - plan_calls)
+        call_charge = extra_calls * 1
+
+        # Total cost
+        total = price + data_charge + call_charge
+
+        # Check budget
+        if total <= budget:
+
+            if total < lowest_cost:
+
+                lowest_cost = total
+                best_plan = name_plan
+
+                best_data_charge = data_charge
+                best_call_charge = call_charge
+
+    # Display result
+    print("\n----- MOBILE PLAN RESULT -----")
+
+    print("Customer Name:", name)
+
+    if best_plan is not None:
+
+        print("Best Plan:", best_plan)
+        print("Plan Cost: Rs.", lowest_cost)
+        print("Extra Data Charges: Rs.", best_data_charge)
+        print("Extra Calling Charges: Rs.", best_call_charge)
+
+        print("Total Cost: Rs.", lowest_cost)
+
     else:
-        deduction = 500 + (gross - 20000) * 0.10
 
-    net_salary = gross - deduction
+        print("No Suitable Plan Found!")
+        print("Please increase your budget or reduce usage.")
 
-    
-    print("\n===== SALARY STATEMENT =====")
-    print("Employee Name:", name)
-    print("Basic Pay: Rs.", round(basic, 2))
-    print("Allowances: Rs.", round(allowances, 2))
-    print("Overtime Pay: Rs.", round(overtime_pay, 2))
-    print("Incentives: Rs.", round(incentives, 2))
-    print("Gross Salary: Rs.", round(gross, 2))
-    print("Deductions: Rs.", round(deduction, 2))
-    print("Net Salary: Rs.", round(net_salary, 2))
-    print("============================")
-
+    print("\nThank You!")
