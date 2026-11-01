@@ -1,87 +1,68 @@
 
+# University Scholarship Allocation System
 
-MIN_AGGREGATE = 75
-MIN_SUBJECT_MARK = 60
-MIN_ATTENDANCE = 75
-MAX_INCOME = 250000
-
+students = []
 eligible_students = []
-rejected_students = []
 
-n = int(input("Enter number of applicants: "))
+n = int(input("Enter number of students: "))
 
 for i in range(n):
-    print(f"\nEnter details of student {i + 1}")
+    print("\nEnter details of Student", i + 1)
 
-    name = input("Student name: ")
-    aggregate = float(input("Aggregate marks (%): "))
+    name = input("Enter student name: ")
+    aggregate = float(input("Enter aggregate marks: "))
 
-    subject_count = int(input("Number of subjects: "))
+    subjects = int(input("Enter number of subjects: "))
     subject_marks = []
 
-    for j in range(subject_count):
-        mark = float(input(f"Subject {j + 1} marks (%): "))
+    for j in range(subjects):
+        mark = float(input("Enter subject mark: "))
         subject_marks.append(mark)
 
-    attendance = float(input("Attendance (%): "))
-    income = float(input("Annual family income (Rs.): "))
+    attendance = float(input("Enter attendance percentage: "))
+    income = float(input("Enter annual family income: "))
 
-    reasons = []
+    # Check eligibility
+    if (aggregate >= 75 and
+        all(mark >= 50 for mark in subject_marks) and
+        attendance >= 75 and
+        income <= 250000):
 
-    if aggregate < MIN_AGGREGATE:
-        reasons.append("Aggregate below 75%")
+        eligible_students.append({
+            "name": name,
+            "aggregate": aggregate,
+            "attendance": attendance,
+            "income": income
+        })
 
-    if any(mark < MIN_SUBJECT_MARK for mark in subject_marks):
-        reasons.append("Subject mark below 60%")
-
-    if attendance < MIN_ATTENDANCE:
-        reasons.append("Attendance below 75%")
-
-    if income > MAX_INCOME:
-        reasons.append("Income above Rs. 250000")
-
-    student = {
-        "name": name,
-        "aggregate": aggregate,
-        "attendance": attendance,
-        "income": income
-    }
-
-    if not reasons:
-        eligible_students.append(student)
     else:
-        rejected_students.append((name, reasons))
+        print(name, "is Not Eligible")
 
-
+# Sort students based on ranking rules
 eligible_students.sort(
-    key=lambda s: (
-        -s["aggregate"],
-        -s["attendance"],
-        s["income"],
-        s["name"].lower()
+    key=lambda x: (
+        -x["aggregate"],
+        -x["attendance"],
+        x["income"]
     )
 )
 
-print("\n===== ELIGIBLE STUDENTS =====")
+# Display results
+print("\n===== SCHOLARSHIP ALLOCATION RESULTS =====")
 
-if eligible_students:
-    print("Rank | Name | Aggregate | Attendance | Income (Rs.)")
+if len(eligible_students) == 0:
+    print("No students are eligible for scholarship.")
 
-    for rank, s in enumerate(eligible_students, start=1):
+else:
+    print("\nRank  Name       Aggregate  Attendance  Income")
+
+    for rank, student in enumerate(eligible_students, start=1):
         print(
-            f"{rank} | {s['name']} | "
-            f"{s['aggregate']:.2f}% | "
-            f"{s['attendance']:.2f}% | "
-            f"{s['income']:.2f}"
+            rank,
+            student["name"],
+            student["aggregate"],
+            student["attendance"],
+            student["income"]
         )
-else:
-    print("No eligible students found.")
 
-print("\n===== REJECTED STUDENTS =====")
-
-if rejected_students:
-    for name, reasons in rejected_students:
-        print(f"{name}: {', '.join(reasons)}")
-else:
-    print("No rejected students.")
-
+print("\nProgram Completed")
