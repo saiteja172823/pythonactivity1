@@ -1,64 +1,52 @@
+print("HOSPITAL BILLING SYSTEM")
 
+name = input("Enter Patient Name: ")
+age = int(input("Enter Patient Age: "))
 
-months = int(input("Enter number of months: "))
-bills = []
+consultation = float(input("Enter Consultation Charges: "))
+diagnostic = float(input("Enter Diagnostic Charges: "))
+treatment = float(input("Enter Treatment Charges: "))
 
-for i in range(months):
-    print("\nMonth", i + 1)
-    units = float(input("Enter units consumed: "))
+# Validate charges
+if age < 0 or consultation < 0 or diagnostic < 0 or treatment < 0:
+    print("Invalid Input!")
 
-    
-    if units <= 100:
-        energy = units * 2
-    elif units <= 200:
-        energy = 100 * 2 + (units - 100) * 3
+else:
+
+    # Calculate total bill
+    total = consultation + diagnostic + treatment
+
+    # Apply concession
+    if age < 12:
+        discount = total * 0.10
+
+    elif age >= 60:
+        discount = total * 0.15
+
     else:
-        energy = 100 * 2 + 100 * 3 + (units - 200) * 5
+        discount = 0
 
-    fixed_charge = 50
+    # Calculate final bill
+    final_bill = total - discount
 
-    
-    if units > 200:
-        surcharge = energy * 0.05
+    # Patient classification
+    if final_bill < 1000:
+        category = "Low Payment"
+
+    elif final_bill <= 3000:
+        category = "Medium Payment"
+
     else:
-        surcharge = 0
+        category = "High Payment"
 
-  
-    if units <= 100:
-        rebate = energy * 0.10
-    else:
-        rebate = 0
+    # Display bill
+    print("\n----- HOSPITAL BILL -----")
 
-    total = energy + fixed_charge + surcharge - rebate
-    bills.append(total)
+    print("Patient Name:", name)
+    print("Patient Age:", age)
+    print("Total Bill: Rs.", total)
+    print("Discount: Rs.", discount)
+    print("Final Bill: Rs.", final_bill)
+    print("Patient Classification:", category)
 
-    print("Energy Charge: Rs.", round(energy, 2))
-    print("Fixed Charge: Rs.", fixed_charge)
-    print("Surcharge: Rs.", round(surcharge, 2))
-    print("Rebate: Rs.", round(rebate, 2))
-    print("Total Bill: Rs.", round(total, 2))
-
-
-print("\n--- Monthly Bill Comparison ---")
-
-for i in range(1, months):
-    previous = bills[i - 1]
-    current = bills[i]
-
-    if previous == 0:
-        if current > 0:
-            print("Month", i + 1,
-                  ": Unusual increase from zero bill")
-        else:
-            print("Month", i + 1, ": No increase")
-    else:
-        increase = ((current - previous) / previous) * 100
-
-        print("Month", i + 1,
-              ": Bill change =", round(increase, 2), "%")
-
-        if increase > 30:
-            print("Unusual increase detected!")
-        else:
-            print("No unusual increase.")
-
+    print("Thank You!")
