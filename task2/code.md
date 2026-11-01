@@ -1,156 +1,97 @@
 
 
 ## 1. Problem Statement
-
-Develop a Python program to calculate household electricity bills based on monthly electricity consumption using a progressive slab tariff system. The program should apply different rates for different consumption slabs, add fixed charges, calculate surcharges, and apply rebates when applicable.
-
-The system should also compare electricity bills across multiple months and identify unusual increases in the bill amount.
-
-Assumed billing rules for this program:
-
-| Electricity consumption  | Rate per unit |
-| ------------------------ | ------------- |
-| First 100 units          | ₹2.00         |
-| Next 100 units (101–200) | ₹3.00         |
-| Above 200 units          | ₹5.00         |
-
-- Fixed charge: ₹50 per month.
-- Surcharge: 5% of the energy charge if consumption exceeds 200 units.
-- Rebate: 10% of the energy charge if consumption is at most 100 units.
-- An unusual increase is identified when the bill rises by more than 30% compared with the previous month.
-
-These are example rates for an academic program, not actual electricity tariffs.
+Hospital Billing and Patient Classification: Process consultation, diagnostic, and treatment charges, apply conditional concessions, validate billing constraints, and classify patients according to a supplied payment policy. 
 
 ## 2. Algorithm
 
-1. Start.
-2. Input the number of months.
-3. For each month, input the household's electricity consumption in units.
-4. Calculate the energy charge using progressive slabs:
-   - First 100 units at ₹2 per unit.
-   - Next 100 units at ₹3 per unit.
-   - Remaining units at ₹5 per unit.
-5. Add the fixed charge of ₹50.
-6. If consumption exceeds 200 units, add a 5% surcharge on the energy charge.
-7. If consumption is at most 100 units, apply a 10% rebate on the energy charge.
-8. Calculate the final bill.
-9. Compare each month's bill with the previous month's bill.
-10. If the increase exceeds 30%, mark it as an unusual increase.
-11. Display monthly consumption, energy charges, surcharges, rebates, and final bills.
-12. Stop.
+**Step 1:** Start the program.
 
-## 3. Flowchart
+**Step 2:** Enter patient name and age.
 
-Copy the following flowchart directly into your assignment. It uses plain text so the alignment is preserved when copied.
+**Step 3:** Enter consultation, diagnostic, and treatment charges.
 
-```
-             +-------------+
-             |    START    |
-             +-------------+
-                    |
-                    v
-       +-------------------------+
-       | Input Number of Months  |
-       +-------------------------+
-                    |
-                    v
-       +-------------------------+
-       | Input Monthly Units     |
-       +-------------------------+
-                    |
-                    v
-       +-------------------------+
-       | Calculate Energy Charge |
-       | Using Progressive Slabs|
-       +-------------------------+
-                    |
-                    v
-       +-------------------------+
-       | Add Fixed Charges       |
-       +-------------------------+
-                    |
-                    v
-       +-------------------------+
-       | Calculate Surcharge     |
-       | and Rebate              |
-       +-------------------------+
-                    |
-                    v
-       +-------------------------+
-       | Calculate Final Bill    |
-       +-------------------------+
-                    |
-                    v
-       +-------------------------+
-       | Compare with Previous    |
-       | Month's Bill             |
-       +-------------------------+
-                    |
-                    v
-          /-------------------\
-         / Bill Increase > 30%?\
-         \                     /
-          \-------------------/
-              /         \
-            Yes          No
-             |            |
-             v            v
-    +----------------+  +----------------+
-    | Mark Unusual   |  | Normal Increase|
-    | Increase       |  | or No Increase |
-    +----------------+  +----------------+
-             |            |
-             +-----+------+
-                   |
-                   v
-       +-------------------------+
-       | More Months Remaining?  |
-       +-------------------------+
-              |             |
-             Yes            No
-              |             |
-              v             v
-       Input Next Month  Display All Bills
-              |             |
-              +---> Repeat  v
-                       +----------+
-                       |   STOP   |
-                       +----------+
+**Step 4:** Check whether the entered charges are valid.
+
+**Step 5:** Calculate the total bill.
+
+**Step 6:** Apply concessions:
+
+* Age below 12 → 10% discount.
+* Age 60 and above → 15% discount.
+* Other ages → No discount.
+
+**Step 7:** Calculate the final bill.
+
+**Step 8:** Classify the patient:
+
+* Below ₹1,000 → Low Payment.
+* ₹1,000 to ₹3,000 → Medium Payment.
+* Above ₹3,000 → High Payment.
+
+**Step 9:** Display the final bill and classification.
+
+**Step 10:** Stop.
+
+## 3. Flowchart 
+
+```mermaid
+flowchart TD
+    A([Start]) --> B[/Enter Patient Name and Age/]
+    B --> C[/Enter Hospital Charges/]
+    C --> D{Charges Valid?}
+    D -- No --> E[Display Invalid Input]
+    E --> Z([Stop])
+    D -- Yes --> F[Calculate Total Bill]
+    F --> G{Age Below 12?}
+    G -- Yes --> H[Apply 10% Discount]
+    G -- No --> I{Age 60 or Above?}
+    I -- Yes --> J[Apply 15% Discount]
+    I -- No --> K[No Discount]
+    H --> L[Calculate Final Bill]
+    J --> L
+    K --> L
+    L --> M{Bill Below 1000?}
+    M -- Yes --> N[Low Payment]
+    M -- No --> O{Bill <= 3000?}
+    O -- Yes --> P[Medium Payment]
+    O -- No --> Q[High Payment]
+    N --> R[/Display Final Bill/]
+    P --> R
+    Q --> R
+    R --> Z([Stop])
 ```
 
-## 4. Python Source Code
 
-```
-        surcharge = energy * SURCHARGE_RATE    else:        surcharge = 0    if units <= 100:        rebate = energy * REBATE_RATE    else:        rebate = 0    # Calculate final bill    total_bill = energy + FIXED_CHARGE + surcharge - rebate    consumptions.append(units)    energy_charges.append(energy)    surcharges.append(surcharge)    rebates.append(rebate)    bills.append(total_bill)# Display monthly bill detailsprint("\n========== BILL DETAILS ==========")print("Month | Units | Energy | Surcharge | Rebate | Total")for i in range(months):    print(        f"{i + 1:5} | {consumptions[i]:5.0f} | "        f"{energy_charges[i]:6.2f} | "        f"{surcharges[i]:9.2f} | "        f"{rebates[i]:6.2f} | {bills[i]:7.2f}"    )# Compare consecutive monthly billsprint("\n========== BILL COMPARISON ==========")if months < 2:    print("At least two months are needed for comparison.")for i in range(1, months):    previous_bill = bills[i - 1]    current_bill = bills[i]    if previous_bill > 0:        increase = (            (current_bill - previous_bill)            / previous_bill        ) * 100    else:        increase = 0 if current_bill == 0 else float("inf")    print(f"Month {i + 1}: Change = ", end="")    if increase == float("inf"):        print("New bill after a zero previous bill")        print("Unusual increase detected.")    else:        print(f"{increase:.2f}%")        if increase > INCREASE_LIMIT:            print("Unusual increase detected!")        else:            print("No unusual increase.")
-```
+## 4. Sample Input
 
-## 5. Sample Input
+```text
+HOSPITAL BILLING SYSTEM
 
-```
-Enter number of months: 3
+Enter Patient Name: Sai Teja
+Enter Patient Age: 65
 
-Month 1
-Enter electricity units consumed: 80
-
-Month 2
-Enter electricity units consumed: 150
-
-Month 3
-Enter electricity units consumed: 250
+Enter Consultation Charges: 500
+Enter Diagnostic Charges: 1000
+Enter Treatment Charges: 3000
 ```
 
-## 6. Sample Output
+## 5. Sample Output
 
+```text
+----- HOSPITAL BILL -----
+
+Patient Name: Sai Teja
+Patient Age: 65
+
+Total Bill: Rs. 4500.0
+Discount: Rs. 675.0
+Final Bill: Rs. 3825.0
+
+Patient Classification: High Payment
+
+Thank You!
 ```
-========== BILL DETAILS ==========
-Month | Units | Energy | Surcharge | Rebate | Total
-    1 |    80 | 160.00 |      0.00 |  16.00 |  194.00
-    2 |   150 | 350.00 |      0.00 |   0.00 |  400.00
-    3 |   250 | 750.00 |     37.50 |   0.00 |  837.50
 
-========== BILL COMPARISON ==========
-Month 2: Change = 106.19%
-Unusual increase detected!
-Month 3: Change = 109.38%
-Unusual increase detected!
-``
+
+
