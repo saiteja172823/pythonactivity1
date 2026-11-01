@@ -1,122 +1,108 @@
 
-
-
 ## 1. Problem Statement
 
-Develop a Python program to calculate the total cost of organizing a campus event, including venue, equipment, catering, transport, and certificates. The program should calculate the participant contribution, determine any sponsorship shortfall, and identify the minimum number of registrations required to break even.
-
+ Progressive Electricity Billing: Calculate household bills using multiple consumption slabs, fixed charges, surcharges, and rebates, then compare bills across several months and identify unusual increases. 
 ## 2. Algorithm
 
-1. Start the program.
-2. Input venue, equipment, catering, transport, and certificate costs.
-3. Input the expected number of participants, registration fee per participant, and sponsorship amount.
-4. Calculate the total event cost.
-5. Calculate the total registration income.
-6. Calculate the total available funds from registrations and sponsorships.
-7. Determine the surplus or sponsorship shortfall.
-8. Calculate the minimum registrations needed to break even.
-9. Display the complete financial report.
-10. Stop.
+**Step 1:** Start the program.
 
-## 3. Flowchart
+**Step 2:** Enter the consumer's name.
 
-```
-          +----------------------+
-          |        START         |
-          +----------------------+
-                     |
-                     v
-          +----------------------+
-          | Input Event Costs    |
-          | and Funding Details  |
-          +----------------------+
-                     |
-                     v
-          +----------------------+
-          | Calculate Total      |
-          | Event Cost           |
-          +----------------------+
-                     |
-                     v
-          +----------------------+
-          | Calculate Registration|
-          | Income               |
-          +----------------------+
-                     |
-                     v
-          +----------------------+
-          | Calculate Total      |
-          | Available Funds      |
-          +----------------------+
-                     |
-                     v
-          +----------------------+
-          | Funds >= Event Cost? |
-          +----------------------+
-               /           \
-             Yes            No
-              |              |
-              v              v
-       +-------------+  +----------------+
-       | Calculate   |  | Calculate      |
-       | Surplus     |  | Shortfall      |
-       +-------------+  +----------------+
-              |              |
-              +-------+------+
-                      |
-                      v
-          +----------------------+
-          | Calculate Minimum    |
-          | Registrations Needed |
-          +----------------------+
-                      |
-                      v
-          +----------------------+
-          | Display Financial    |
-          | Report               |
-          +----------------------+
-                      |
-                      v
-          +----------------------+
-          |         STOP         |
-          +----------------------+
+**Step 3:** Enter electricity consumption in units for three months.
+
+**Step 4:** Calculate electricity charges using the following slabs:
+
+| Units     | Rate per unit |
+| --------- | ------------: |
+| 0–100     |            ₹2 |
+| 101–200   |            ₹3 |
+| 201–300   |            ₹5 |
+| Above 300 |            ₹7 |
+
+**Step 5:** Add fixed charges of ₹50.
+
+**Step 6:** Add a 5% surcharge.
+
+**Step 7:** Apply a 10% rebate if consumption is below 100 units.
+
+**Step 8:** Calculate the final bill.
+
+**Step 9:** Compare monthly bills and identify unusual increases.
+
+**Step 10:** Display the final bills and stop.
+
+## 3. Flowchart 
+
+```mermaid
+flowchart TD
+    A([Start]) --> B[/Enter Consumer Name/]
+    B --> C[/Enter Monthly Units/]
+    C --> D{Units <= 100?}
+    D -- Yes --> E[Calculate at Rs.2 per unit]
+    D -- No --> F{Units <= 200?}
+    F -- Yes --> G[Calculate slab charges]
+    F -- No --> H{Units <= 300?}
+    H -- Yes --> I[Calculate slab charges]
+    H -- No --> J[Calculate slab charges]
+    E --> K[Add Fixed Charges]
+    G --> K
+    I --> K
+    J --> K
+    K --> L[Add 5% Surcharge]
+    L --> M{Units below 100?}
+    M -- Yes --> N[Apply 10% Rebate]
+    M -- No --> O[Calculate Final Bill]
+    N --> O
+    O --> P[Compare Monthly Bills]
+    P --> Q[Identify Unusual Increase]
+    Q --> R[/Display Bill Details/]
+    R --> S([Stop])
 ```
 
-## 4. Python Source Code
 
-```
-# Campus Event Financial Planningprint("===== CAMPUS EVENT FINANCIAL PLANNING =====")venue_cost = float(input("Enter venue cost: Rs. "))equipment_cost = float(input("Enter equipment cost: Rs. "))catering_cost = float(input("Enter catering cost per participant: Rs. "))transport_cost = float(input("Enter transport cost per participant: Rs. "))certificate_cost = float(input("Enter certificate cost per participant: Rs. "))participants = int(input("Enter expected number of participants: "))registration_fee = float(input("Enter registration fee per participant: Rs. "))sponsorship = float(input("Enter sponsorship amount: Rs. "))if (venue_cost < 0 or equipment_cost < 0 or catering_cost < 0        or transport_cost < 0 or certificate_cost < 0        or participants < 0 or registration_fee < 0        or sponsorship < 0):    print("Invalid input. Costs and amounts cannot be negative.")else:    # Fixed costs    fixed_cost = venue_cost + equipment_cost    # Variable cost per participant    variable_cost = catering_cost + transport_cost + certificate_cost    # Total event cost    total_cost = fixed_cost + variable_cost * participants    # Participant contributions    registration_income = participants * registration_fee    # Total available funds    total_funds = registration_income + sponsorship
+
+## 4. Sample Input
+
+```text
+ELECTRICITY BILL CALCULATOR
+
+Enter Consumer Name: Sai Teja
+
+Month 1
+Enter electricity units: 80
+
+Month 2
+Enter electricity units: 150
+
+Month 3
+Enter electricity units: 280
 ```
 
-## 5. Sample Input
+## 5. Sample Output
 
-```
-Enter venue cost: Rs. 10000
-Enter equipment cost: Rs. 5000
-Enter catering cost per participant: Rs. 200
-Enter transport cost per participant: Rs. 50
-Enter certificate cost per participant: Rs. 20
-Enter expected number of participants: 100
-Enter registration fee per participant: Rs. 400
-Enter sponsorship amount: Rs. 10000
-```
+```text
+ELECTRICITY BILL CALCULATOR
 
-## 6. Sample Output
+Enter Consumer Name: Sai Teja
 
-```
-========== EVENT FINANCIAL REPORT ==========
-Venue Cost: Rs. 10000.0
-Equipment Cost: Rs. 5000.0
-Catering Cost: Rs. 20000.0
-Transport Cost: Rs. 5000.0
-Certificate Cost: Rs. 2000.0
-Total Event Cost: Rs. 42000.0
-Registration Income: Rs. 40000.0
-Sponsorship: Rs. 10000.0
-Total Available Funds: Rs. 50000.0
-Surplus Amount: Rs. 8000.0
-Status: EVENT IS FINANCIALLY VIABLE
-Minimum Registrations to Break Even: 20
-============================================
+Month 1
+Electricity Bill: Rs. 196.65
+
+Month 2
+Electricity Bill: Rs. 473.75
+
+Month 3
+Electricity Bill: Rs. 1207.5
+
+MONTHLY BILL COMPARISON
+
+Month 1 : 196.65
+Month 2 : 473.75
+Month 3 : 1207.5
+
+Unusual increase detected in Month 2
+Unusual increase detected in Month 3
+
+Thank You!
 ```
 
