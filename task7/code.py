@@ -1,110 +1,85 @@
+print("MULTI-CURRENCY TRAVEL BUDGET ANALYSIS")
 
+# Traveller details
+name = input("Enter Traveller Name: ")
 
-MAX_DISCOUNT = 500
+budget = float(input("Enter Travel Budget in INR: "))
 
-tax_rates = {
-    "food": 5,
-    "clothing": 12,
-    "electronics": 18,
-    "other": 10
+n = int(input("Enter Number of Expense Categories: "))
+
+total = 0
+expenses = {}
+
+# Exchange rates
+rates = {
+    "INR": 1,
+    "USD": 85,
+    "EUR": 92,
+    "GBP": 110
 }
 
-products = []
-subtotal = 0
-total_tax = 0
-
-n = int(input("Enter number of products: "))
-
+# Enter expenses
 for i in range(n):
-    print("\nProduct", i + 1)
 
-    name = input("Enter product name: ")
-    category = input(
-        "Enter category (food/clothing/electronics/other): "
-    ).strip().lower()
+    print("\nExpense", i + 1)
 
-    price = float(input("Enter unit price: Rs. "))
-    quantity = int(input("Enter quantity: "))
+    category = input("Enter Category: ")
 
-    if category not in tax_rates:
-        print("Invalid category. Using other category.")
-        category = "other"
+    currency = input("Enter Currency (INR/USD/EUR/GBP): ").upper()
 
-    if price < 0 or quantity <= 0:
-        print("Invalid price or quantity. Product skipped.")
+    amount = float(input("Enter Expense Amount: "))
+
+    # Validate input
+    if amount < 0 or currency not in rates:
+        print("Invalid Input!")
         continue
 
-    amount = price * quantity
-    subtotal += amount
+    # Currency conversion
+    converted = amount * rates[currency]
 
-    products.append({
-        "name": name,
-        "category": category,
-        "price": price,
-        "quantity": quantity,
-        "amount": amount
-    })
+    # Conversion fee
+    fee = converted * 0.02
+
+    # Total expense
+    final_amount = converted + fee
+
+    expenses[category] = expenses.get(category, 0) + final_amount
+
+    total = total + final_amount
+
+    print("Converted Amount: Rs.", round(converted, 2))
+    print("Conversion Fee: Rs.", round(fee, 2))
+    print("Total Expense: Rs.", round(final_amount, 2))
 
 
-if subtotal >= 5000:
-    discount_rate = 15
-elif subtotal >= 3000:
-    discount_rate = 10
-elif subtotal >= 1000:
-    discount_rate = 5
+# Budget comparison
+print("\n===== TRAVEL BUDGET REPORT =====")
+
+print("Traveller Name:", name)
+print("Travel Budget: Rs.", budget)
+print("Total Expenses: Rs.", round(total, 2))
+
+if total < budget:
+    print("Status: Within Budget")
+
+elif total == budget:
+    print("Status: Budget Fully Used")
+
 else:
-    discount_rate = 0
+    print("Status: Budget Exceeded")
 
-discount = min(subtotal * discount_rate / 100, MAX_DISCOUNT)
+# Largest expense category
+if expenses:
 
+    largest = max(expenses, key=expenses.get)
 
-for product in products:
-    if subtotal > 0:
-        item_discount = discount * product["amount"] / subtotal
-    else:
-        item_discount = 0
+    print("Largest Expense Category:", largest)
 
-    taxable_amount = product["amount"] - item_discount
-    tax_rate = tax_rates[product["category"]]
-    item_tax = taxable_amount * tax_rate / 100
+    print("Largest Expense Amount: Rs.", round(expenses[largest], 2))
 
-    product["discount"] = item_discount
-    product["tax"] = item_tax
-    product["total"] = taxable_amount + item_tax
+else:
+    print("No Valid Expenses Entered")
 
-    total_tax += item_tax
+print("Remaining Budget: Rs.", round(budget - total, 2))
 
-
-print("\n" + "=" * 75)
-print("                     RETAIL INVOICE")
-print("=" * 75)
-
-print(
-    f"{'Product':<15}{'Category':<15}{'Qty':>5}"
-    f"{'Amount':>10}{'Discount':>10}{'Tax':>8}{'Total':>10}"
-)
-
-print("-" * 75)
-
-for product in products:
-    print(
-        f"{product['name']:<15}"
-        f"{product['category']:<15}"
-        f"{product['quantity']:>5}"
-        f"{product['amount']:>10.2f}"
-        f"{product['discount']:>10.2f}"
-        f"{product['tax']:>8.2f}"
-        f"{product['total']:>10.2f}"
-    )
-
-final_amount = subtotal - discount + total_tax
-
-print("-" * 75)
-print(f"Subtotal:              Rs. {subtotal:.2f}")
-print(f"Discount Rate:         {discount_rate}%")
-print(f"Discount Applied:      Rs. {discount:.2f}")
-print(f"Maximum Discount:      Rs. {MAX_DISCOUNT:.2f}")
-print(f"Total Tax:             Rs. {total_tax:.2f}")
-print(f"Final Payable Amount:  Rs. {final_amount:.2f}")
-print("=" * 75)
-print("Thank you for shopping!")
+print("\nThank You!")
